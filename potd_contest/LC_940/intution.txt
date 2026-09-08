@@ -1,0 +1,51 @@
+Naive approach : 
+We can form all possible substrings that is 2^2000 operations
+We will keep storing unique strings in a set
+This will cause MLE and TLE to start racing each other to show up first on your screen
+Ofcourse this appraoch is unfeasible
+
+Optimal appraoch : 
+Lets just assume for a while that all characters in the given string 's' are unique
+In this case there is no possibility of duplicate strings
+lets start with an empty set subs that stores all strings formed upto idx i (0 to n-1)
+Initially subs is empty so it will contain only 1 element = "";
+hence subs[0] = 1;
+
+Now every time a new character appears the subs set doubles in size to accomodate all strings for conditions of take and not take
+this results in 2 times the number of strings in subs
+Hence subs[i] = subs[i-1]<<1;
+
+now this is true for every index since our assumption gaurantees that all chars are unique
+
+lets now take a look at duplicates
+
+take example "xaba"
+Initially size(subs) = 1;
+at i=0 size(subs) = 2 : subs = {"",x}
+at i=1 size(subs) = 4 : subs = {"",x,a,xa} see that s[i] i.e. "a" appends after all existing strings 
+at i=2 size(subs) = 8 : subs = {"",x,a,xa,b,xb,ab,xab}
+at i=3 size(subs) = ? : subs = ?
+
+lets do this one 
+on simple appending like before subs = {"",x,a,xa,b,xb,ab,xab,a,xa,aa,xaa,ba,xba,aba,xaba}
+but {a,xa} are duplicates 
+we must remove them so size(subs) = 2*8-2(as duplicates) = 14
+on trying other cases it can be deduced that a character that has appeared before generates as many number of duplicates
+as there were number of strings in subs before that character appeared last
+
+Therefore we maintain lastSeen vector to track it
+Lets now see the solution
+
+int n = s.size();                               // its obvious
+vector<int>lastSeen(26,-1);                     // lastseen for every character as there is only 26
+vector<int>subs(n+1,0);                         // stores number of string made upon taking char at s[i]
+subs[0] = 1;                                    // without any character we have 2 empty string
+for(int i=1;i<=n;i++){                          // loop form 1st char to last
+    int dup = lastSeen[s[i-1]-'a']==-1 ? 0 :  subs[lastSeen[s[i-1]-'a']-1];  // count dup : 0 if char is not seen before (lastSeen[s[i]-'a']==0) otherwise number of string in subs before that
+    subs[i] = (((subs[i-1]<<1)%mod - dup)%mod + mod)%mod; store value with mod
+    lastSeen[s[i-1]-'a'] = i;  // update lastSeen
+}
+return (subs[n] - 1 + mod) % mod; 
+
+return subs[n]-1 as only non-empty count is asked
+mod because subs[n] could be zero due to modular subtraction before
