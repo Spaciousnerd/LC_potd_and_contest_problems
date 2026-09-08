@@ -1,0 +1,7 @@
+1 <= n <= 105 
+this means that if : 
+n<1000 : there will be no commas
+n>=1000 : 1 or more commas,
+Remember that the upper limit is 1e5 that is 100,000 (100 thousand not 1 lakh otherwise it would make 2 commas (1,00,000))
+Therefore all we need is to check whether n<1000 
+return 0 if n<1000 or n-1000+1 if not since 1-1000 will still not have commas and other (n-1000+1) numbers have 1 comma each
