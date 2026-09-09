@@ -1,0 +1,18 @@
+Intuition
+The key observation is that a comma appears after every 3 digits.
+Numbers below 1000 → 0 commas
+1000 onward → at least 1 comma
+1,000,000 onward → at least 2 commas
+1,000,000,000 onward → at least 3 commas
+So instead of checking every number, we count how many numbers contribute each comma.
+For the first comma, every number from 1000 to n contributes one:
+n - 1000 + 1
+For the second comma, every number from 1,000,000 to n contributes another:
+n - 1,000,000 + 1
+We keep increasing the starting point by 1000 each time (1000 → 1,000,000 → 1,000,000,000...) and add the contribution of that comma.
+This is exactly what the loop does:
+result += (n - start + 1);
+start *= 1000;
+
+Time Complexity: O(log10n)
+Space Complexity: O(1)
