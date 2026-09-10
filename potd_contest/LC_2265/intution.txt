@@ -1,0 +1,18 @@
+Intuition
+
+For every node, we need to know the sum and number of nodes in its entire subtree to calculate its average.
+
+So, for a node:
+
+First get the (sum, count) of its left subtree.
+Get the (sum, count) of its right subtree.
+Add the current node:
+sum = leftSum + rightSum + root->val
+count = leftCount + rightCount + 1
+Now the average of this subtree is sum / count.
+If root->val is equal to this average, add 1 to the answer.
+Return the current subtree's (sum, count) to its parent.
+
+We use postorder traversal because the parent cannot calculate its subtree's sum/count until it has the information from both children.
+
+Important: The average is integer division, so sum / count is enough.
