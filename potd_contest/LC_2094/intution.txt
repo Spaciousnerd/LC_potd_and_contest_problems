@@ -1,0 +1,18 @@
+THIS APPRAOCH IS ALSO APPLICABLE TO LC-3483
+
+for 3 digit even number there is not much possiblity but
+
+(1-9)*100 + (0-9)*10 + (0/2/4/6/8)
+
+But we do need to make sure these digits are present hence maintain a vector
+we can use a map as well but since we only have 10 digits at max vector<int>(10,0) does the job
+
+this map stores frequency of each digit int vector<int>digits
+
+now start a loop for all possible values at hundreds place and inner loop for tens place and inner loop for ones place
+we are doing map[i] ==0 ; map[i]-- to make sure digit is taken again only if there are more then one present
+
+map[k]++ is done again to restore the original frequency for creating next possible numbers
+
+at last we return the vector that stores the generated numbers 
+remember we do not need to sort as we have generated number in ascending order

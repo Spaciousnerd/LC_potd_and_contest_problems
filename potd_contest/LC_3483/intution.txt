@@ -1,0 +1,7 @@
+THIS IS BRUTE FORCE APPROACH : THE OPTIMAL APPROACH IS IN THIS SAME REPO AT LC_2094
+This was easy question and does not need much of explanation
+
+use every available digit using nested loop
+skip when on two pointers are on same place
+make 3 digit number
+maintain a set and see if the number was made before if not insert it and icrement count
