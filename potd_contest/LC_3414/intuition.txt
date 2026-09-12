@@ -1,0 +1,44 @@
+LC 3414 - Maximum Score of Non-overlapping Intervals
+======================================================
+
+PROBLEM
+Pick exactly 4 pairwise non-overlapping intervals to maximize sum of
+weights. On tie, return the lexicographically smallest index set.
+
+OBSERVATION
+Sort intervals by start time. Once I "take" an interval, the only
+intervals I can still take are the ones starting strictly after its
+end -> binary search for the first such interval (nextIdx[i]).
+So the overlap constraint collapses into: after taking i, jump to
+nextIdx[i]. No need to check pairwise overlap explicitly.
+
+DP IDEA
+At sorted position i, with k intervals still needed, the only things
+that matter are i and k (everything before i is already decided).
+=> optimal substructure + overlapping subproblems => DP(i, k).
+
+STATE
+dp[i][k] = best {score, chosen original indices} using intervals from
+position i onward, still needing exactly k more picks.
+
+TRANSITION
+skip = dp[i+1][k]                        (don't take i)
+take = dp[nextIdx[i]][k-1] + weight[i]   (take i, jump ahead)
+dp[i][k] = higher score of the two; on tie, smaller sorted idx list.
+Base: k==0 or i==n -> nothing more to add (empty pick).
+
+WHY IT WORKS
+Sorting + nextIdx guarantees "take" never overlaps future picks, and
+every reachable (i,k) is solved once and reused (memo/table) -> both
+correctness and O(n log n + n*k) efficiency, k fixed at 4.
+
+MEMO vs BOTTOM-UP
+Same recurrence. Memo = recursion top-down with cache. Bottom-up =
+fill dp[i][k] for i = n-1 -> 0, k = 1 -> 4; row i=n and column k=0
+are just the default-initialized base case, so no extra "if" needed.
+
+GOTCHA (harmless)
+Base case Node() has score = -1 (doubles as "uncomputed" memo flag).
+So the true optimal weight sum is actually (returned score + 1) -
+but this offset is the same for every completed path, so it never
+changes which indices win. Only .idxs is returned, so it's fine.
