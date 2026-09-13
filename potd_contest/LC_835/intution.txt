@@ -1,0 +1,53 @@
+Problem : 
+Another brutal problem statement by leetcode
+There are two n*n binary matrices given 
+these are images lets call them a and b
+we have to shift(more like hover) a (or b) over the other matrix and count the maximum number of matching values that are 1
+i.e a[i][j] == b[i2][j2] && a[i][j]==1
+
+Hover rule : 
+we can hover the images however we want
+this is how it starts and ends along with some intermediary states
+_______
+|  a   |
+|     _|
+|____|_|_____
+     |   b  |
+     |      |
+     |______|
+
+_______
+|  a   |
+|______|
+|____<-|----- this is overlapped area the number of 1 here are the count for this iteration
+|      |
+|   b  |
+|______|
+
+_______
+|  b   |
+|     _|
+|____|_|_____
+     |   a  |
+     |      |
+     |______|
+
+THe maximum value for all such arrangements is the answer
+
+Solution
+we nest two loop over two variables row_offset and col_offset
+note that  -n+1 <=both row_offset,col_offset < n
+
+You can see that this is the actual shift possible that would result
+since a shift of n on either side makes 0 overlapping indexes
+also row_offset==0 and col_offset==0 are the condition of entire matrix overlapping
+
+now we use countOverlap() to count the number of overlaps and return its maximum value for all values of {row_offset,col_offset}
+
+Logic of countOverlap
+once row_offset and col_offset are decided
+shift indices of hovering matrix are
+i2 = i + row_offset;
+j2 = j+ col_offset;
+this can be determined by dry run
+just loop over j to n  for every i to n and compare values
