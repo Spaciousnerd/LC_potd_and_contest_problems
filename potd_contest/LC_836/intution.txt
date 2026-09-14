@@ -1,0 +1,242 @@
+# RECTANGLE OVERLAP — INTUITION
+
+For two rectangles:
+
+R1 = [x1, y1, x2, y2]
+R2 = [x3, y3, x4, y4]
+
+where:
+(x1, y1) = bottom-left of R1
+(x2, y2) = top-right of R1
+(x3, y3) = bottom-left of R2
+(x4, y4) = top-right of R2
+
+## CORE IDEA
+
+Two rectangles overlap if and only if their projections overlap on BOTH axes.
+
+So we separately check:
+
+1. Do the rectangles overlap on the X-axis?
+2. Do the rectangles overlap on the Y-axis?
+
+If both are true -> rectangles overlap.
+
+## X-AXIS
+
+Consider the rectangles as intervals on the X-axis:
+
+R1 = [x1, x2]
+R2 = [x3, x4]
+
+The condition for overlap is:
+
+```
+x1 < x4 && x3 < x2
+```
+
+## Why only these TWO comparisons?
+
+Instead of checking whether endpoints are inside the other rectangle,
+we check whether the intervals are separated.
+
+There are only TWO ways for intervals to NOT overlap:
+
+CASE 1: R2 is completely to the LEFT of R1
+
+```
+x3 ---- x4        x1 ---- x2
+|------|           |------|
+```
+
+Here:
+
+```
+x4 <= x1
+```
+
+So:
+
+```
+x1 < x4  -> FALSE
+```
+
+Therefore, no overlap.
+
+CASE 2: R2 is completely to the RIGHT of R1
+
+```
+x1 ---- x2        x3 ---- x4
+|------|           |------|
+```
+
+Here:
+
+```
+x2 <= x3
+```
+
+So:
+
+```
+x3 < x2  -> FALSE
+```
+
+Therefore, no overlap.
+
+If neither of these cases happens, the intervals MUST overlap.
+
+## ALL POSSIBILITIES
+
+1. R2 completely left of R1
+
+   x3 ---- x4        x1 ---- x2
+
+   x1 < x4  -> FALSE
+   x3 < x2  -> TRUE
+
+   RESULT: NO OVERLAP
+
+2. R2 overlaps R1 from the left
+
+   x3 ---- x1 ---- x4 ---- x2
+   |-------------|
+   common part
+
+   x1 < x4  -> TRUE
+   x3 < x2  -> TRUE
+
+   RESULT: OVERLAP
+
+3. R2 is completely inside R1
+
+   | x1 ---- x3 ---- x4 ---- x2 |
+   | -------------------------- |
+
+   ```
+     |------------|
+           R2
+   ```
+
+   x1 < x4  -> TRUE
+   x3 < x2  -> TRUE
+
+   RESULT: OVERLAP
+
+4. R1 is completely inside R2
+
+   | x3 ---- x1 ---- x2 ---- x4 |
+   | -------------------------- |
+
+   ```
+     |------------|
+           R1
+   ```
+
+   x1 < x4  -> TRUE
+   x3 < x2  -> TRUE
+
+   RESULT: OVERLAP
+
+5. R2 overlaps R1 from the right
+
+   x1 ---- x3 ---- x2 ---- x4
+   |-------------|
+   common part
+
+   x1 < x4  -> TRUE
+   x3 < x2  -> TRUE
+
+   RESULT: OVERLAP
+
+6. R2 completely right of R1
+
+   x1 ---- x2        x3 ---- x4
+
+   x1 < x4  -> TRUE
+   x3 < x2  -> FALSE
+
+   RESULT: NO OVERLAP
+
+## IMPORTANT OBSERVATION
+
+It does NOT matter if x4 is farther to the right than x2.
+
+For example:
+
+```
+R1:       x1 -------- x2
+R2:   x3 ---------------------- x4
+```
+
+Here x4 is far beyond x2.
+
+Still:
+
+```
+x1 < x4  -> TRUE
+x3 < x2  -> TRUE
+```
+
+Therefore, they overlap.
+
+We do NOT need to check whether x4 lies inside R1.
+
+The condition only asks whether R2 extends far enough to reach
+past R1's left edge, and whether R2 starts before R1's right edge.
+
+## SAME LOGIC FOR Y-AXIS
+
+For the Y-axis:
+
+R1 = [y1, y2]
+R2 = [y3, y4]
+
+Overlap condition:
+
+```
+y1 < y4 && y3 < y2
+```
+
+## FINAL CONDITION
+
+The rectangles overlap only when BOTH their X and Y projections overlap:
+
+```
+x1 < x4 && x3 < x2
+&&
+y1 < y4 && y3 < y2
+```
+
+## CODE
+
+bool isRectangleOverlap(vector<int>& rec1, vector<int>& rec2) {
+bool x = rec1[0] < rec2[2] && rec2[0] < rec1[2];
+bool y = rec1[1] < rec2[3] && rec2[1] < rec1[3];
+
+```
+return x && y;
+```
+
+}
+
+## WHY STRICT '<' ?
+
+If the edges only touch, there is no area of overlap.
+
+Example:
+
+```
+R1: x1 -------- x2
+                   x3 -------- x4
+```
+
+If:
+
+```
+x2 == x3
+```
+
+the rectangles only touch at the boundary.
+
+Therefore
