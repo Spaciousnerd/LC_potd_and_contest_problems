@@ -1,0 +1,241 @@
+LC 2472 - Maximum Number of Non-overlapping Palindrome Substrings
+
+PROBLEM INTUITION
+=================
+
+We need to find the maximum number of non-overlapping palindromic substrings
+whose length is at least k.
+
+The two main things we need to handle are:
+
+1. Quickly check whether a substring is a palindrome.
+2. Select the maximum number of non-overlapping valid palindromes.
+
+
+--------------------------------------------------
+1. PALINDROME PREPROCESSING
+--------------------------------------------------
+
+Checking every substring by expanding/reversing would be expensive.
+
+Instead, use DP:
+
+pal[i][j] = true if s[i...j] is a palindrome.
+
+For a substring to be a palindrome:
+
+    s[i] == s[j]
+
+and the inside must also be a palindrome:
+
+    pal[i + 1][j - 1]
+
+Therefore:
+
+    pal[i][j] = s[i] == s[j] && pal[i+1][j-1]
+
+Base cases:
+
+    Length 1:
+        Every single character is a palindrome.
+
+    Length 2:
+        s[i] == s[j]
+
+After preprocessing, we can check whether ANY substring is a palindrome
+in O(1).
+
+
+--------------------------------------------------
+2. DP FOR MAXIMUM NUMBER OF PALINDROMES
+--------------------------------------------------
+
+Define:
+
+    dp[i] = maximum number of valid non-overlapping palindromes
+            that can be selected from the first i characters.
+
+We process the string from left to right.
+
+
+OPTION 1: SKIP THE CURRENT CHARACTER
+-------------------------------------
+
+The palindrome might not end at position i-1.
+
+So simply carry forward the previous answer:
+
+    dp[i] = dp[i-1]
+
+
+OPTION 2: TAKE A PALINDROME ENDING AT i-1
+------------------------------------------
+
+Suppose:
+
+    s[j ... i-1]
+
+is a palindrome and its length is at least k.
+
+Then we can select it.
+
+Everything before j has already been handled by:
+
+    dp[j]
+
+After taking this palindrome:
+
+    dp[j] + 1
+
+So:
+
+    dp[i] = max(dp[i], dp[j] + 1)
+
+
+The complete transition is:
+
+    dp[i] = max(
+        dp[i-1],
+        dp[j] + 1
+    )
+
+whenever s[j...i-1] is a palindrome of length >= k.
+
+
+--------------------------------------------------
+WHY DOES THIS GUARANTEE NON-OVERLAPPING?
+--------------------------------------------------
+
+If we take:
+
+    s[j ... i-1]
+
+then the previous palindrome must end before j.
+
+That is exactly what dp[j] represents.
+
+Visual:
+
+    |---- previous palindromes ----| palindrome |
+                                    j          i-1
+
+    dp[j]                            +1
+
+Therefore, overlapping is automatically avoided.
+
+
+--------------------------------------------------
+EXAMPLE
+--------------------------------------------------
+
+s = "abaccdbbd"
+k = 3
+
+One possible selection is:
+
+    [aba]cc[dbbd]
+
+Both are palindromes and both have length >= 3.
+
+They don't overlap.
+
+Therefore:
+
+    answer = 2
+
+
+--------------------------------------------------
+IMPORTANT INTUITION
+--------------------------------------------------
+
+Think of every valid palindrome as an interval:
+
+    [start ---------------- end]
+
+For example:
+
+    [aba]
+     0 1 2
+
+    [dbbd]
+     5 6 7 8
+
+Now the problem becomes:
+
+    "Select the maximum number of non-overlapping valid intervals."
+
+Since every interval gives exactly +1, we only care about how many
+intervals we can select.
+
+The DP processes the string from left to right and decides:
+
+    SKIP this ending
+           OR
+    TAKE a palindrome ending here
+
+
+--------------------------------------------------
+DRY RUN IDEA
+--------------------------------------------------
+
+Suppose we find:
+
+    s[j ... i-1] = palindrome
+
+Then:
+
+    dp[j] = best answer before this palindrome
+
+Taking it gives:
+
+    dp[j] + 1
+
+Compare that with:
+
+    dp[i-1]
+
+which means we don't take a palindrome ending at i-1.
+
+Thus:
+
+    dp[i] = max(dp[i-1], dp[j] + 1)
+
+
+--------------------------------------------------
+COMPLEXITY
+--------------------------------------------------
+
+Palindrome DP:
+
+    O(n²)
+
+Maximum palindrome selection:
+
+    O(n²)
+
+Total:
+
+    O(n²)
+
+Space:
+
+    O(n²)
+
+
+--------------------------------------------------
+PATTERN RECOGNITION
+--------------------------------------------------
+
+This problem combines two patterns:
+
+    1. Interval / substring palindrome DP
+    2. 1D DP for maximum number of non-overlapping intervals
+
+The key thought is:
+
+    "If I choose a palindrome ending at i-1,
+     what is the best answer I can have before its starting point?"
+
+That immediately leads to:
+
+    dp[j] + 1
