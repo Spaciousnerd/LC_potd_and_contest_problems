@@ -1,0 +1,39 @@
+LC 1621 — Number of Sets of K Non-Overlapping Line Segments
+Intuition:
+We need to choose k non-overlapping segments from n points.
+Instead of thinking about each segment separately, think about their endpoints.
+For k segments, we have 2k endpoints:
+start1, end1, start2, end2, ..., startk, endk
+Since segments cannot overlap but are allowed to touch, their endpoints must satisfy:
+start1 <= end1 <= start2 <= end2 <= ... <= startk <= endk
+So the problem becomes counting valid non-decreasing sequences of 2k endpoints.
+The important observation is that this can be converted into a combinations problem.
+The number of ways is:
+C(n + k - 1, 2k)
+For example, if n = 4 and k = 1:
+C(4 + 1 - 1, 2)
+= C(4, 2)
+= 6
+which matches the 6 possible segments between 4 points.
+So the problem reduces to calculating:
+C(N, R)
+where:
+N = n + k - 1
+R = 2
+Since the answer is modulo 1e9 + 7, we cannot use normal division.
+We use:
+a^(-1) = a^(MOD - 2) mod MOD
+from Fermat's Little Theorem.
+Therefore:
+C(N,R) = N(N-1)...(N-R+1) / R!
+can be calculated by multiplying each denominator's modular inverse.
+Complexity:
+Time: O(k log MOD)
+Space: O(1)
+Pattern:
+When a problem asks for k non-overlapping segments and segments are allowed to touch, try thinking about the 2k ordered endpoints.
+k segments
+-> 2k endpoints
+-> ordered endpoints
+-> combinations
+-> C(n + k - 1, 2k)
