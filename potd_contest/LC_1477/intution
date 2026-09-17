@@ -1,0 +1,64 @@
+Intuition
+We need to find two non-overlapping subarrays whose sums are equal to target, and minimize their total length.
+The key is to solve the problem from left to right.
+For every position, keep track of the shortest valid subarray that ends before the current position.
+When we find a new subarray with sum target, we can combine it with the best previous subarray.
+Because the array contains positive numbers, we can use a sliding window to find every subarray with sum target.
+At each right pointer:
+Expand the window by adding nums[right].
+If the sum becomes greater than target, move left until the sum is valid again.
+When the sum equals target, we found a valid subarray.
+Check the shortest valid subarray that appeared before this one.
+Update the answer with their combined length.
+Store the current subarray as the best subarray ending at or before this position.
+The important part is maintaining:
+best[i] = minimum length of a target-sum subarray completely inside indices 0...i
+Then, if the current subarray is [left, right], any previous subarray ending before left is automatically non-overlapping.
+So we use:
+best[left - 1] + (right - left + 1)
+to form the answer.
+Pattern
+Sliding Window + Prefix Minimum DP
+Find current target-sum subarray
+↓
+Find shortest target-sum subarray before it
+↓
+Combine their lengths
+↓
+Take minimum
+
+Complexity
+Time: O(n)
+Space: O(n)
+The O(n) time is possible because both left and right only move forward once.Intuition
+We need to find two non-overlapping subarrays whose sums are equal to target, and minimize their total length.
+The key is to solve the problem from left to right.
+For every position, keep track of the shortest valid subarray that ends before the current position.
+When we find a new subarray with sum target, we can combine it with the best previous subarray.
+Because the array contains positive numbers, we can use a sliding window to find every subarray with sum target.
+At each right pointer:
+Expand the window by adding nums[right].
+If the sum becomes greater than target, move left until the sum is valid again.
+When the sum equals target, we found a valid subarray.
+Check the shortest valid subarray that appeared before this one.
+Update the answer with their combined length.
+Store the current subarray as the best subarray ending at or before this position.
+The important part is maintaining:
+best[i] = minimum length of a target-sum subarray completely inside indices 0...i
+Then, if the current subarray is [left, right], any previous subarray ending before left is automatically non-overlapping.
+So we use:
+best[left - 1] + (right - left + 1)
+to form the answer.
+Pattern
+Sliding Window + Prefix Minimum DP
+Find current target-sum subarray
+↓
+Find shortest target-sum subarray before it
+↓
+Combine their lengths
+↓
+Take minimum
+Complexity
+Time: O(n)
+Space: O(n)
+The O(n) time is possible because both left and right only move forward once.
