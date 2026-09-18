@@ -1,0 +1,59 @@
+1520. Maximum Number of Non-Overlapping Substrings
+Conditions to make strings
+1.The substrings do not overlap, that is for any two substrings s[i..j] and s[x..y], either j < x or i > y is true.
+2.A substring that contains a certain character c must also contain all occurrences of c.
+
+step 1. The first point to note is that a string is valid iff all instances of character in the that string
+so the smallest possible length of substring is that which starts at the first occurence of character and last occurence of character
+this therefore is our first step
+--------------------------------
+vector<int>start(26,-1);
+vector<int>end(26,-1);
+vector<bool>isValid(26,true);
+for(int i=0;i<n;i++){
+    if(start[s[i]-'a']==-1) start[s[i]-'a'] = i;
+    end[s[i]-'a'] = i;
+}
+--------------------------------
+here start stores first occurence of each 26 characters in string
+end stores last occurence of each 26 characters in string
+isValid stores which character cannot start a string 
+    : if c be a character and string from start[c] to end[c] contains some characters that have appeared before start[c] therefore this index cannot be used to start a string
+
+step 2. Second step involves finding where string starting from start[c] ends 
+Note that as stated before we need to make sure that for every char from start[c] to end[c] and their all occurences must be in substr
+so we iterate from start[c] to end[c] and update where substr ends 
+also skip !isValid character
+-------------------------------
+for(int c=0;c<26;c++){
+    if(start[c]==-1) continue;
+    for(int i=start[c];i<end[c];i++){
+        if(start[s[i]-'a']<start[c]){
+            isValid[c] = false;
+            break;
+        }
+        end[c] = max(end[c],end[s[i]-'a']);
+    }
+}
+-------------------------------
+vector<string>ans;
+int lastTakenStart = n;
+for(int i=n-1;i>=0;i--){
+    int idx = s[i]-'a';
+    if(!isValid[idx]) continue;
+    if(i==start[idx] && end[idx]<lastTakenStart){
+        ans.push_back(s.substr(i,end[idx]-i+1));
+        lastTakenStart = start[idx];
+    }            
+}
+return ans;
+---------------------------------
+Step 3. Now all we need to do is to populate ans array
+
+Now lets take an example s = "aeea"
+here starting from a ans = {aeea}
+and starting from e ans = {ee}
+
+It is necessary to note that in case of same number of substrings shorter strings will be taken 
+Therefore we will start iteration from last since then we will encounter shorter things first
+hence starting from lastTakenStart we will keep taking arrays we encounter and populate the array
