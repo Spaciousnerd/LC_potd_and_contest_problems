@@ -1,0 +1,84 @@
+LC 1401. Circle and Rectangle Overlapping
+For X:
+Rectangle spans from x1 to x2.
+Circle center is at xc.
+We need the X-coordinate of the point on the rectangle
+that is closest to xc.
+CASE 1: xc is LEFT of the rectangle
+------------------------------------
+
+        xc        x1                         x2
+         |         |                          |
+         C         |                          |
+                   |                          |
+                   +--------------------------+
+        xc < x1
+Closest x-coordinate: x = x1
+Why?
+The closest point inside [x1, x2] to xc is x1.
+------------------------------------
+CASE 2: xc is INSIDE the rectangle
+------------------------------------
+
+        x1             xc                  x2
+         |              |                   |
+         |              C                   |
+         |              |                   |
+         +--------------+-------------------+
+        x1 <= xc <= x2
+Closest x-coordinate:
+        x = xc
+Why?
+The circle center itself lies inside the rectangle's
+X-range, so the closest X-coordinate is xc.
+
+------------------------------------
+CASE 3: xc is RIGHT of the rectangle
+------------------------------------
+        x1                         x2       xc
+         |                          |        |
+         |                          |        C
+         |                          |        |
+         +--------------------------+--------+
+        xc > x2
+Closest x-coordinate: x = x2
+
+Why?
+The closest point inside [x1, x2] to xc is x2.
+====================================
+COMBINED FORMULA
+====================================
+if (xc < x1) x = x1;
+else if (xc > x2) x = x2;
+else x = xc;
+Same exact logic for Y:
+if (yc < y1)y = y1;
+else if (yc > y2) y = y2;
+else y = yc;
+
+====================================
+THEN
+====================================
+We now have the closest point:
+        (x, y)
+to the circle center:
+        (xc, yc)
+Distance²  = (xc-x)² + (yc-y)²
+Circle radius² = radius²
+If: distance² <= radius²
+then the circle overlaps the rectangle.
+====================================
+WHY YOUR CODE WORKS
+====================================
+if(x1 > xc) x = x1;
+else if(x2 < xc) x = x2;
+else x = xc;
+This is exactly the 3 cases above.
+Same for y.
+Finally:
+int s = (xc-x)*(xc-x) + (yc-y)*(yc-y) - radius*radius;
+return s <= 0;
+s <= 0 means:
+distance² - radius² <= 0
+closest point is inside/on the circle
+OVERLAP
