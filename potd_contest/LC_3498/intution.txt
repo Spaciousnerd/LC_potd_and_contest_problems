@@ -1,0 +1,7 @@
+This question is worth solving only for beginners/in a contest/to maintain streak
+why would anyone look for intution in this question
+
+Anyways
+deg is incremented by a certain value for every char in s 
+value = (index+1)*(z-s[i]+1) // z-s[i]+1 is distance from z as stated
+deg is returned
