@@ -1,0 +1,25 @@
+LC_4059 - Lexicographically Largest Power Array
+
+Problem
+Rearrange nums (n<=5e4, values <2^15). power[i] = longest prefix of perm with bit (14-i) set in every element. Return the lexicographically largest power.
+
+Observation
+Bit 14 matters most, then 13, ... To max a bit, put every number having it in front. That forces perm = [ones][zeros], with the order inside each group still free.
+
+Key idea
+Keep an ordered list of blocks. Order inside a block is free; order between blocks is fixed. Refine the blocks bit by bit, 14 down to 0.
+
+State
+segments = ordered blocks (start: one block with all nums); prefix = run length through full blocks.
+
+Transition (each bit)
+walk blocks left to right:
+- every number has the bit: prefix += size, keep block
+- first block with a zero: power = prefix + #ones in it; split into [ones][zeros]; STOP, copy the rest unchanged
+- no such block: power = prefix (= n)
+
+Why it works
+Only the ones of the first mixed block can extend the run, so exactly that split is forced. Later blocks stay free for lower bits. Do NOT split them or just sort descending: on [7,5,3,2,1] the best bit-0 run is 4 (order 7,5,3,1,2) but descending gives 3.
+
+Complexity
+O(15*n) time, O(n) space

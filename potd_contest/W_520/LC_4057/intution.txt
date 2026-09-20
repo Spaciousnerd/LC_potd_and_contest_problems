@@ -1,0 +1,24 @@
+LC_4057 - Number of Intersecting Interval Pairs II
+
+Problem
+Count pairs (i<j) of closed intervals sharing at least one point. Touching counts. n up to 1e5, coords up to 1e9.
+
+Observation
+An intersecting pair = the later-starting interval begins while the other is still open. Checking all pairs is O(n^2), too slow.
+
+Key idea
+Sweep line. At every START, add "how many intervals are open right now" to the answer.
+
+State
+active = intervals started but not ended. ans = long long (can reach ~5e9).
+
+Transition
+events = (pos,0) for start, (pos,1) for end; sort (starts come before ends at same pos)
+start: ans += active; active++
+end:   active--
+
+Why it works
+Each intersecting pair is counted once, at the later start, while the other is open. A disjoint pair: the earlier one's end is sorted before the later start, so it is already closed. Starts before ends keeps touching pairs.
+
+Complexity
+O(n log n) time, O(n) space

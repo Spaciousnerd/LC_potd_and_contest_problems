@@ -1,0 +1,23 @@
+LC_4056 - Number of Intersecting Interval Pairs I
+
+Problem idea
+Count pairs of closed intervals (i<j) that share at least one point. Touching at an endpoint counts. Pairs are unordered, so I can reorder the intervals freely.
+
+Core observation
+Sort by start. For interval i, only look at earlier ones (they start at or before start_i). Such a j overlaps i exactly when end_j >= start_i. Easier to count the ones that do NOT overlap: end_j < start_i.
+
+How to think about the solution
+1. Sort intervals by start.
+2. Make a second array of all ends, sorted.
+3. For interval i: nonIntersecting = number of ends < start_i = lower_bound(ends, start_i).
+4. Overlapping earlier intervals = i - nonIntersecting. Add to answer.
+
+Why the approach works
+Any interval k with end_k < start_i also has start_k < start_i, so it is always before i in sorted order. So "number of ends < start_i" over ALL intervals only ever counts earlier ones. Earlier = i in total, minus the disjoint ones = overlapping ones. Each pair is counted once, at the later-starting interval. (The min(i, ...) in the code never actually cuts anything, it is just a guard.)
+
+Edge cases
+- lower_bound, not upper_bound: an end equal to start_i must count as overlap.
+- Equal starts overlap and are counted, since end_j >= start_j = start_i.
+
+Complexity
+O(n log n) time, O(n) space. (n <= 100, so O(n^2) brute force also passes.)

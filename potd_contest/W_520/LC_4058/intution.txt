@@ -1,0 +1,25 @@
+LC_4058 - Maximum Pulse Value After One Subarray Rotation
+
+Problem
+pulse = a0 - a1 + a2 - ... At most one left-rotation of nums[l..r] by 1. Maximise pulse. n up to 1e5.
+
+Observation
+Only index-parity changes matter. In the rotation, l+1..r shift left one step (sign flips). The first element jumps to r and flips only if the length is even.
+Even length: whole segment flips, gain = -2 * (signed sum of segment).
+Odd length: same gain as the even-length segment [l+1..r], nothing new.
+
+Key idea
+Only even-length segments matter. P = signed prefix sums (P[0]=0). gain = -2*(P[i]-P[j]) for j<i with the same parity.
+
+State
+pref = P[i]; maxPref[0/1] = best earlier P[j] with j even/odd (maxPref[0]=0, odd empty); bestGain = 0 (do nothing).
+
+Transition
+for i=1..n: update pref; if bucket[i%2] non-empty: bestGain = max(bestGain, -2*(pref - maxPref[i%2])); then update maxPref[i%2].
+answer = base + bestGain (base = original pulse)
+
+Why it works
+Even-length rotation = flip every sign inside; a "best earlier prefix minus current prefix" scan split by parity keeps the length even.
+
+Complexity
+O(n) time, O(1) space. long long (values reach ~1e14).
