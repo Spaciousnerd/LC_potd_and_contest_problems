@@ -1,0 +1,36 @@
+We need to count the number of non-empty subsequences whose product has each possible remainder modulo k.
+
+Key idea:
+Instead of storing every subsequence, group them by their product % k.
+
+dp[r] = number of subsequences seen so far whose product % k = r.
+
+For every new number x:
+
+1. Start a new subsequence containing only x.
+   Its product remainder is:
+   x % k
+
+2. Extend every existing subsequence.
+   If an existing subsequence has product remainder r, after multiplying by x:
+   new remainder = (r * x) % k
+
+So we create a new array ndp:
+
+* ndp[x % k]++ for the new single-element subsequence.
+* For every remainder r:
+  ndp[(r * x) % k] += dp[r]
+
+Then:
+dp = ndp
+
+Finally, every subsequence formed so far contributes to the answer, so:
+result[r] += dp[r]
+
+Why use ndp?
+
+We must use each number at most once. If we updated dp directly, subsequences created using the current number could be used again during the same iteration, effectively using the same element multiple times.
+
+Time complexity: O(n * k)
+
+Space complexity: O(k)
