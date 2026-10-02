@@ -1,0 +1,26 @@
+A very simple question similar to generate all subsequences
+
+A resursive approach is obvious
+
+Here we take a vector<string>res as the array to store valid strings
+valid strings are nothing but all vps (valid parenthisis string) of with n opening brackets
+
+maintain a string s and keep track of the number of open and close brackets
+
+Base case :
+if open>n or close > open the string has become inavlid so return
+if open==n and open==close and !s.empty() we should push the string and since it cant grow any further we return
+
+recursive call:
+if open<n:
+we can push open brackets
+call the function at this step with open+1
+now pop this bracket to restore the string
+
+similarly if close < open
+push -> call -> pop
+
+res stores the answer
+
+Optimization
+using string s by ref saves some memory and time
